@@ -1,0 +1,21 @@
+{
+  "description": "Schema for a student's existing knowledge profile, passed into generate_study_plan.",
+  "fields": {
+    "known_topics": "list[str] - topics the student is already comfortable with, e.g. ['recursion', 'arrays']",
+    "weak_topics": "list[str] - topics the student has struggled with, e.g. ['dynamic programming']",
+    "goal": "str - what the student is preparing for, e.g. 'new-grad SWE interviews' or 'CS 3683 final exam'",
+    "days_until_goal": "int - number of days until the interview/exam/deadline"
+  },
+  "example_filled": {
+    "known_topics": ["recursion", "arrays", "hash tables"],
+    "weak_topics": ["dynamic programming"],
+    "goal": "coding interview prep",
+    "days_until_goal": 14
+  },
+  "example_empty": {
+    "known_topics": [],
+    "weak_topics": [],
+    "goal": "",
+    "days_until_goal": 0
+  }
+}

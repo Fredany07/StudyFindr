@@ -1,0 +1,56 @@
+[
+  {
+    "id": "p001",
+    "name": "Maya R.",
+    "topics": ["dynamic programming", "graphs"],
+    "level": "intermediate",
+    "availability": ["evenings", "weekends"],
+    "timezone": "CST",
+    "bio": "Prepping for new-grad SWE interviews, focusing on DP and graph problems this month."
+  },
+  {
+    "id": "p002",
+    "name": "Jordan K.",
+    "topics": ["dynamic programming"],
+    "level": "beginner",
+    "availability": ["mornings"],
+    "timezone": "EST",
+    "bio": "Just started DP, looking for someone to talk through patterns with."
+  },
+  {
+    "id": "p003",
+    "name": "Aisha B.",
+    "topics": ["system design", "graphs"],
+    "level": "advanced",
+    "availability": ["evenings"],
+    "timezone": "PST",
+    "bio": "Senior-level interview prep, happy to help with graph problems too."
+  },
+  {
+    "id": "p004",
+    "name": "Liam T.",
+    "topics": ["trees", "recursion"],
+    "level": "beginner",
+    "availability": ["weekends"],
+    "timezone": "CST",
+    "bio": "Working through tree traversals before moving on to DP."
+  },
+  {
+    "id": "p005",
+    "name": "Priya S.",
+    "topics": ["dynamic programming", "arrays"],
+    "level": "intermediate",
+    "availability": ["evenings", "mornings"],
+    "timezone": "CST",
+    "bio": "Doing a DP problem a day until my interview in three weeks."
+  },
+  {
+    "id": "p006",
+    "name": "Noah C.",
+    "topics": ["hash tables", "arrays"],
+    "level": "beginner",
+    "availability": ["weekends"],
+    "timezone": "MST",
+    "bio": "Brushing up on fundamentals before tackling harder topics."
+  }
+]

@@ -1,0 +1,134 @@
+[
+  {
+    "id": "r001",
+    "title": "Dynamic Programming Patterns",
+    "type": "article",
+    "topic": "dynamic programming",
+    "tags": ["dp", "memoization", "interview-prep"],
+    "difficulty": "intermediate",
+    "platform": "NeetCode",
+    "duration_minutes": 25,
+    "description": "Breaks down the core DP patterns (0/1 knapsack, LCS, coin change) with annotated solutions."
+  },
+  {
+    "id": "r002",
+    "title": "Intro to Dynamic Programming",
+    "type": "video",
+    "topic": "dynamic programming",
+    "tags": ["dp", "beginner", "recursion-to-dp"],
+    "difficulty": "beginner",
+    "platform": "YouTube",
+    "duration_minutes": 18,
+    "description": "Bridges from plain recursion to memoized recursion to tabulation, using Fibonacci and climbing stairs."
+  },
+  {
+    "id": "r003",
+    "title": "Hard DP Problem Set",
+    "type": "practice_set",
+    "topic": "dynamic programming",
+    "tags": ["dp", "advanced", "interview-prep"],
+    "difficulty": "advanced",
+    "platform": "LeetCode",
+    "duration_minutes": 90,
+    "description": "10 hard-rated DP problems including edit distance, LCS variants, and partition problems."
+  },
+  {
+    "id": "r004",
+    "title": "Binary Search Trees Crash Course",
+    "type": "video",
+    "topic": "trees",
+    "tags": ["bst", "trees", "traversal"],
+    "difficulty": "beginner",
+    "platform": "YouTube",
+    "duration_minutes": 22,
+    "description": "Covers BST insertion, deletion, and the three traversal orders with animated walkthroughs."
+  },
+  {
+    "id": "r005",
+    "title": "Graph Algorithms Overview",
+    "type": "article",
+    "topic": "graphs",
+    "tags": ["bfs", "dfs", "dijkstra", "graphs"],
+    "difficulty": "intermediate",
+    "platform": "GeeksforGeeks",
+    "duration_minutes": 30,
+    "description": "Covers BFS, DFS, Dijkstra's, and when to reach for each in an interview setting."
+  },
+  {
+    "id": "r006",
+    "title": "Graph Theory Practice Problems",
+    "type": "practice_set",
+    "topic": "graphs",
+    "tags": ["graphs", "interview-prep"],
+    "difficulty": "intermediate",
+    "platform": "LeetCode",
+    "duration_minutes": 60,
+    "description": "8 medium-rated graph problems covering connected components, topological sort, and shortest paths."
+  },
+  {
+    "id": "r007",
+    "title": "Hash Tables Deep Dive",
+    "type": "article",
+    "topic": "hash tables",
+    "tags": ["hashing", "data-structures"],
+    "difficulty": "beginner",
+    "platform": "GeeksforGeeks",
+    "duration_minutes": 15,
+    "description": "Explains collision handling, load factor, and amortized O(1) lookups."
+  },
+  {
+    "id": "r008",
+    "title": "System Design Fundamentals",
+    "type": "video",
+    "topic": "system design",
+    "tags": ["system-design", "scalability"],
+    "difficulty": "advanced",
+    "platform": "YouTube",
+    "duration_minutes": 45,
+    "description": "Covers load balancing, caching, and database sharding through real interview-style prompts."
+  },
+  {
+    "id": "r009",
+    "title": "Big O Notation Explained",
+    "type": "video",
+    "topic": "complexity analysis",
+    "tags": ["big-o", "fundamentals"],
+    "difficulty": "beginner",
+    "platform": "YouTube",
+    "duration_minutes": 12,
+    "description": "A friendly walkthrough of time and space complexity with everyday analogies."
+  },
+  {
+    "id": "r010",
+    "title": "Sliding Window Technique",
+    "type": "article",
+    "topic": "arrays",
+    "tags": ["sliding-window", "arrays", "interview-prep"],
+    "difficulty": "intermediate",
+    "platform": "NeetCode",
+    "duration_minutes": 20,
+    "description": "Covers fixed and variable-size sliding window problems with template code."
+  },
+  {
+    "id": "r011",
+    "title": "Recursion Fundamentals",
+    "type": "video",
+    "topic": "recursion",
+    "tags": ["recursion", "beginner"],
+    "difficulty": "beginner",
+    "platform": "YouTube",
+    "duration_minutes": 16,
+    "description": "Base cases, call stacks, and how to trace recursive calls by hand."
+  },
+  {
+    "id": "r012",
+    "title": "Advanced DP: Bitmask DP",
+    "type": "practice_set",
+    "topic": "dynamic programming",
+    "tags": ["dp", "bitmask", "advanced"],
+    "difficulty": "advanced",
+    "platform": "Codeforces",
+    "duration_minutes": 75,
+    "description": "Problems using bitmask states for DP over subsets, common in competitive programming."
+  }
+]
