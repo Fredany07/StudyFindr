@@ -19,8 +19,8 @@ pip install -r requirements.txt
 cp .env.example .env
 # then edit .env and add your free Groq API key from console.groq.com
 
-python app.py
-# open the URL printed in the terminal (usually http://localhost:7860)
+streamlit run app.py
+# opens automatically in your browser, usually http://localhost:8501
 ```
 
 Run the tests:

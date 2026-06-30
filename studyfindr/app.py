@@ -1,154 +1,134 @@
 """
-StudyFindr Gradio app. Run with: python app.py
+StudyFindr Streamlit app. Run with: streamlit run app.py
 Opens a local web UI for entering a study request and seeing each tool's
 output as the agent works through the planning loop.
 """
-import gradio as gr
+import streamlit as st
 from agent import run_agent
+
+st.set_page_config(page_title="StudyFindr", page_icon="📚", layout="wide")
 
 
 def format_resource(resource):
     if not resource:
-        return "_No resource selected._"
-    return (
-        f"**{resource['title']}** ({resource['type']}, {resource['difficulty']})\n\n"
-        f"Platform: {resource['platform']} • {resource['duration_minutes']} min\n\n"
-        f"{resource['description']}"
-    )
+        st.info("No resource selected.")
+        return
+    st.markdown(f"**{resource['title']}** ({resource['type']}, {resource['difficulty']})")
+    st.caption(f"Platform: {resource['platform']} • {resource['duration_minutes']} min")
+    st.write(resource['description'])
 
 
 def format_partner(partner):
     if not partner:
-        return "_No study partner matched -- continuing solo._"
-    return (
-        f"**{partner['name']}** ({partner['level']})\n\n"
-        f"Available: {', '.join(partner['availability'])} • {partner['timezone']}\n\n"
-        f"{partner['bio']}"
-    )
+        st.info("No study partner matched -- continuing solo.")
+        return
+    st.markdown(f"**{partner['name']}** ({partner['level']})")
+    st.caption(f"Available: {', '.join(partner['availability'])} • {partner['timezone']}")
+    st.write(partner['bio'])
 
 
 def format_flashcards(cards):
     if not cards:
-        return "_No flashcards generated._"
-    lines = []
+        st.info("No flashcards generated.")
+        return
     for i, c in enumerate(cards, 1):
-        lines.append(f"**Q{i}:** {c['question']}\n\n**A{i}:** {c['answer']}")
-    return "\n\n---\n\n".join(lines)
+        with st.expander(f"Q{i}: {c['question']}"):
+            st.write(c['answer'])
 
 
-def handle_query(
-    topic,
-    resource_type,
-    max_difficulty,
-    want_partner,
-    partner_availability,
-    partner_level,
-    want_flashcards,
-    num_flashcards,
-    known_topics,
-    weak_topics,
-    goal,
-    days_until_goal,
-):
-    """Maps form inputs to run_agent() args, then maps the session dict
-    to the output panels."""
-    resource_type = resource_type if resource_type != "any" else None
-    max_difficulty = max_difficulty if max_difficulty != "any" else None
-    partner_availability = partner_availability if partner_availability != "any" else None
-    partner_level = partner_level if partner_level != "any" else None
+st.title("📚 StudyFindr")
+st.write(
+    "Tell the agent what you're studying. It searches for a resource, "
+    "optionally finds a study partner and generates flashcards, then "
+    "builds a study plan and a shareable recap -- branching its behavior "
+    "based on what each tool returns."
+)
+
+with st.sidebar:
+    st.header("Study request")
+
+    topic = st.text_input("Topic", placeholder="e.g. dynamic programming")
+    resource_type = st.selectbox("Resource type", ["any", "article", "video", "practice_set"])
+    max_difficulty = st.selectbox("Max difficulty", ["any", "beginner", "intermediate", "advanced"])
+
+    st.subheader("Study partner")
+    want_partner = st.checkbox("Try to find a study partner", value=False)
+    partner_availability = st.selectbox("Your availability", ["any", "mornings", "evenings", "weekends"])
+    partner_level = st.selectbox("Your level", ["any", "beginner", "intermediate", "advanced"])
+
+    st.subheader("Flashcards")
+    want_flashcards = st.checkbox("Generate flashcards", value=False)
+    num_flashcards = st.slider("Number of flashcards", 1, 10, 5)
+
+    st.subheader("What you already know")
+    known_topics = st.text_input("Known topics (comma-separated)", placeholder="recursion, arrays")
+    weak_topics = st.text_input("Weak topics (comma-separated)", placeholder="dynamic programming")
+    goal = st.text_input("Goal", placeholder="coding interview prep")
+    days_until_goal = st.number_input("Days until goal", min_value=0, value=14)
+
+    submit = st.button("Find my study plan", type="primary", use_container_width=True)
+
+if submit:
+    if not topic.strip():
+        st.error("Please enter a topic before submitting.")
+        st.stop()
+
+    resource_type_val = None if resource_type == "any" else resource_type
+    max_difficulty_val = None if max_difficulty == "any" else max_difficulty
+    partner_availability_val = None if partner_availability == "any" else partner_availability
+    partner_level_val = None if partner_level == "any" else partner_level
 
     existing_knowledge = {
         "known_topics": [t.strip() for t in known_topics.split(",") if t.strip()],
         "weak_topics": [t.strip() for t in weak_topics.split(",") if t.strip()],
         "goal": goal,
-        "days_until_goal": int(days_until_goal) if days_until_goal else 0,
+        "days_until_goal": int(days_until_goal),
     }
 
-    session = run_agent(
-        topic=topic,
-        resource_type=resource_type,
-        max_difficulty=max_difficulty,
-        want_partner=want_partner,
-        partner_availability=partner_availability,
-        partner_level=partner_level,
-        want_flashcards=want_flashcards,
-        num_flashcards=int(num_flashcards),
-        existing_knowledge=existing_knowledge,
-    )
+    with st.spinner("Running the agent..."):
+        session = run_agent(
+            topic=topic,
+            resource_type=resource_type_val,
+            max_difficulty=max_difficulty_val,
+            want_partner=want_partner,
+            partner_availability=partner_availability_val,
+            partner_level=partner_level_val,
+            want_flashcards=want_flashcards,
+            num_flashcards=int(num_flashcards),
+            existing_knowledge=existing_knowledge,
+        )
 
-    notes_text = "\n".join(f"- {n}" for n in session["notes"]) if session["notes"] else "_No fallback branches were triggered._"
-    error_text = session["error"] if session["error"] else "_No errors._"
+    if session["error"]:
+        st.error(session["error"])
 
-    return (
-        format_resource(session["selected_resource"]),
-        format_partner(session["partner_match"]),
-        format_flashcards(session["flashcards"]),
-        session["study_plan"] or "_No study plan generated._",
-        session["recap_card"] or "_No recap card generated._",
-        notes_text,
-        error_text,
-    )
+    if session["notes"]:
+        with st.expander("Agent notes (fallbacks / branching decisions)", expanded=False):
+            for n in session["notes"]:
+                st.write(f"- {n}")
 
+    col1, col2 = st.columns(2)
 
-with gr.Blocks(title="StudyFindr") as demo:
-    gr.Markdown("# 📚 StudyFindr")
-    gr.Markdown(
-        "Tell the agent what you're studying. It searches for a resource, "
-        "optionally finds a study partner and generates flashcards, then "
-        "builds a study plan and a shareable recap -- branching its behavior "
-        "based on what each tool returns."
-    )
+    with col1:
+        st.subheader("Resource found")
+        format_resource(session["selected_resource"])
 
-    with gr.Row():
-        with gr.Column(scale=1):
-            topic = gr.Textbox(label="Topic", placeholder="e.g. dynamic programming")
-            resource_type = gr.Dropdown(
-                ["any", "article", "video", "practice_set"], value="any", label="Resource type"
-            )
-            max_difficulty = gr.Dropdown(
-                ["any", "beginner", "intermediate", "advanced"], value="any", label="Max difficulty"
-            )
+        st.subheader("Study partner")
+        format_partner(session["partner_match"])
 
-            gr.Markdown("**Study partner**")
-            want_partner = gr.Checkbox(label="Try to find a study partner", value=False)
-            partner_availability = gr.Dropdown(
-                ["any", "mornings", "evenings", "weekends"], value="any", label="Your availability"
-            )
-            partner_level = gr.Dropdown(
-                ["any", "beginner", "intermediate", "advanced"], value="any", label="Your level"
-            )
+        st.subheader("Flashcards")
+        format_flashcards(session["flashcards"])
 
-            gr.Markdown("**Flashcards**")
-            want_flashcards = gr.Checkbox(label="Generate flashcards", value=False)
-            num_flashcards = gr.Slider(1, 10, value=5, step=1, label="Number of flashcards")
+    with col2:
+        st.subheader("Study plan")
+        if session["study_plan"]:
+            st.write(session["study_plan"])
+        else:
+            st.info("No study plan generated.")
 
-            gr.Markdown("**What you already know**")
-            known_topics = gr.Textbox(label="Known topics (comma-separated)", placeholder="recursion, arrays")
-            weak_topics = gr.Textbox(label="Weak topics (comma-separated)", placeholder="dynamic programming")
-            goal = gr.Textbox(label="Goal", placeholder="coding interview prep")
-            days_until_goal = gr.Number(label="Days until goal", value=14)
-
-            submit = gr.Button("Find my study plan", variant="primary")
-
-        with gr.Column(scale=1):
-            resource_out = gr.Markdown(label="Resource found")
-            partner_out = gr.Markdown(label="Study partner")
-            flashcards_out = gr.Markdown(label="Flashcards")
-            plan_out = gr.Markdown(label="Study plan")
-            recap_out = gr.Markdown(label="Recap card")
-            notes_out = gr.Markdown(label="Agent notes (fallbacks/branching)")
-            error_out = gr.Markdown(label="Errors")
-
-    submit.click(
-        fn=handle_query,
-        inputs=[
-            topic, resource_type, max_difficulty,
-            want_partner, partner_availability, partner_level,
-            want_flashcards, num_flashcards,
-            known_topics, weak_topics, goal, days_until_goal,
-        ],
-        outputs=[resource_out, partner_out, flashcards_out, plan_out, recap_out, notes_out, error_out],
-    )
-
-if __name__ == "__main__":
-    demo.launch()
+        st.subheader("Recap card")
+        if session["recap_card"]:
+            st.success(session["recap_card"])
+        else:
+            st.info("No recap card generated.")
+else:
+    st.caption("Fill in the sidebar and click **Find my study plan** to run the agent.")
